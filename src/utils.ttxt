@@ -1,0 +1,81 @@
+module; // starts a global module fragment
+
+/*
+if you had raw-includes, or stuff that couldn't be import, then that's where they'd go in, e.g
+#include <wx/wx.h>
+
+// I don't have any of this here, so, ignoring the first line works as well - MSVC understand
+// this is a module, via the `export module ...` line below [the .ixx file extension also helps haha]
+
+*/
+
+// declares the utils primary module interface unit for the named module `utils`
+export module utils;
+
+
+/* imports of stuff you may need */
+
+
+// import-exports :print, which is a partition module interface unit
+export import :print; // importer of the utils will be able to call utty::print() defined in the :print
+
+// the partition module interface units below won't be VISIBLE by importers of utils, but ...
+// see how they are REACHABLE via utty::greet() and utty::my_int()
+// --> visible and reachable here, in this file; their homeland [1a, [1b]], since they're part of `utils`
+// in main.cpp they're only reachable --> I couldn't do utty::mn::my_int() there
+import :helloworld; // [1a] - its district is partitions and its town is utils-helloworld.ixx
+import :mynumber; // [1b] - its district is partitions and its town is utils-mynumber.ixx
+
+
+/* start of the real thing */
+
+// utty::* is visible visible by any importers of utils
+export namespace utty {
+	void greet();
+	int my_int();
+	void print_a_truth();
+}
+
+// utty::* isn't itself visible visible by any importers of utils
+// utty::an_available_int is
+// prive::my_secret_number is available in this file and could be used to help you internally implement other stuff
+namespace utty::vars {
+	export int an_available_int = 666;
+	int my_secret_number{1234};
+	const std::string my_fav_line{"\"Someone has to do the hard job. -B. Stroustrup\""};
+}
+
+
+module:private;
+
+// [2]
+int my_fav_number{42};
+bool use_secret{false};
+
+// you can implement utty::* however you wish and as long as their interfaces remains the same,
+// there's no need for rebuilds
+
+void utty::greet() {
+		utty::hw::hello_world();
+}
+
+void utty::print_a_truth() {
+		utty::print(utty::vars::my_fav_line);
+}
+
+
+int utty::my_int() {
+		if(use_secret) {
+			return utty::mn::my_int(utty::vars::my_secret_number);
+		}
+		return utty::mn::my_int(my_fav_number);
+}
+
+
+// [2]
+/*
+I just want to make a point:
+I can use this variable to help implement my other functions, but it won't be by no means seen by main.cpp, since it is in the
+private module fragment only --> you can have whatever you want in this part and as long as they're not part of
+a `export`, they won't be visible by outsiders.
+*/

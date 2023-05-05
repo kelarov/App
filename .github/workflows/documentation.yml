@@ -1,0 +1,27 @@
+name: Documentation
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    name: Build and publish documentation (Ubuntu Only)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - name: Install doxygen
+      run: |
+        sudo apt-get install doxygen
+    - name: Get the `docs` target config
+      run: |
+        cmake --workflow --preset config-linux
+    - name: build the docs target
+      run: |
+        cmake --build build/release --config Release --target docs -j4
+
+    - name: Deploy to GitHub Pages
+      uses: Cecilapp/GitHub-Pages-deploy@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        build_dir: ./docs/html

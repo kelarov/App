@@ -1,0 +1,39 @@
+name: "CodeQL-GH"
+
+on: workflow_dispatch
+
+jobs:
+  analyze:
+    name: AnalyzedTestingBuild
+    runs-on: windows-latest
+    permissions:
+      actions: write
+      contents: write
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: build
+      run: |
+        cmake --workflow --preset config-build-test
+
+    - name: run test exe
+      run: |
+        ./build/release/tests/utils/Release/utils_tests.exe
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"

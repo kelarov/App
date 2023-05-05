@@ -1,0 +1,32 @@
+fail_fast: false
+
+#ci:
+#    skip: ["clang-tidy","oclint","uncrustify", "cppcheck", "cpplint", "include-what-you-use", "cmake-format", "cmake-lint"]
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+        exclude: .vscode
+#      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+#-   repo: https://github.com/pocc/pre-commit-hooks
+#    rev: v1.3.5
+#    hooks:
+#      - id: clang-format
+#        args: [-i]
+#      - id: clang-tidy
+#      - id: oclint
+#      - id: uncrustify
+#      - id: cppcheck
+#      - id: cpplint
+#      - id: include-what-you-use
+#
+#-   repo: https://github.com/cheshirekow/cmake-format-precommit
+#    rev: v0.6.13
+#    hooks:
+#    - id: cmake-format
+#    - id: cmake-lint

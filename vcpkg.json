@@ -1,0 +1,26 @@
+{
+  "name" : "app",
+  "version-string" : "0.1.0",
+  "description": [
+    "A Template for CMake Projects with Modern C++ Features"
+  ],
+  "features": {
+    "samples": {
+      "description": "Creates an exe from ./app/main.cpp",
+      "dependencies": []
+    },
+    "tests": {
+      "description": "Enables Testing with Google Test",
+      "dependencies": [
+        {
+          "$explanation": [
+            "Since we use use gtest, we need to pull and make it available"
+          ],
+          "name": "gtest",
+          "default-features": false,
+          "features": []
+        }
+      ]
+    }
+  }
+}

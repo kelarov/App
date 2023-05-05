@@ -1,0 +1,12 @@
+.idea
+.vs
+.vscode
+.PVS-Studio
+stacktrace.*
+vcpkg_installed
+
+build/*
+docs/html
+
+CMakeUserPresets.json
+*.pdb
