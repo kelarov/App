@@ -1,3 +1,6 @@
+Jump to a new, more organised [version](https://github.com/nextcpp/nextcpp) of this.
+
+===================
 # App
 This all started with me showcasing how to use the C++20 Modules feature, but now I'm going to use this repo as my all-things-swe-with-cpp learning ground.
 
