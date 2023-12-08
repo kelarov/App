@@ -1,4 +1,4 @@
-Jump to a new, more organised [version](https://github.com/nextcpp/nextcpp) of this.
+Jump to a **NEWER** [version](https://github.com/nextcpp/kk-cpp).
 
 ===================
 # App
