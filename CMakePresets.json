@@ -1,0 +1,131 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 30,
+    "patch": 3
+  },
+  "include": [],
+  "configurePresets": [
+    {
+      "name": "linux-base",
+      "description": "Base Configuration for Linux",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        }
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "lnx-x64-debug",
+      "inherits": "linux-base",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "lnx-x64-release",
+      "inherits": "linux-base",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "lnx-x64-release",
+      "configurePreset": "lnx-x64-release"
+    },
+    {
+      "name": "lnx-x64-debug",
+      "configurePreset": "lnx-x64-debug"
+    },
+    {
+      "name": "myapp-install",
+      "targets": "install",
+      "configurePreset": "lnx-x64-release"
+    }
+  ],
+
+  "testPresets": [
+    {
+      "name": "lnx-x64-release",
+      "configurePreset": "lnx-x64-release",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true,
+        "verbosity": "verbose"
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    }
+  ],
+
+  "workflowPresets": [
+    {
+      "name": "lnx-config-build-dbg",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "lnx-x64-debug"
+        },
+        {
+          "type": "build",
+          "name": "lnx-x64-debug"
+        }
+      ]
+    },
+    {
+      "name": "lnx-config-build-rel",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "lnx-x64-release"
+        },
+        {
+          "type": "build",
+          "name": "lnx-x64-release"
+        }
+      ]
+    },
+    {
+      "name": "lnx-config-build-test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "lnx-x64-release"
+        },
+        {
+          "type": "build",
+          "name": "lnx-x64-release"
+        },
+        {
+          "type": "test",
+          "name": "lnx-x64-release"
+        }
+      ]
+    }
+  ]
+}
